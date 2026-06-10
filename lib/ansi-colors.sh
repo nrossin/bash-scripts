@@ -3,7 +3,8 @@
 #########################
 
 # Reset
-RESET='\033[0m'         # Reset ALL attributes
+RESET='\033[0m'            # Reset ALL attributes
+RESET_RENDERED=$'\033[0m'  # Rendered form, for matching codes already emitted by log()
 
 ##############
 # Formatting #

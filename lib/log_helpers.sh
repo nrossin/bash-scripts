@@ -17,52 +17,77 @@ log_pending() {
   printf "%b" "${1:-}"
 }
 
+#######################################
+# Apply a style to text, re-applying the style after any embedded resets so
+# nested inline shortcuts (e.g. "$(hotkey ...)") do not cancel the enclosing
+# style.
+# Globals:
+#   RESET          - The unrendered ANSI reset constant
+#   RESET_RENDERED - The rendered ANSI reset escape sequence
+# Arguments:
+#   $1 - The ANSI style code(s) to apply (e.g. "${BOLD}${RED}")
+#   $2 - The text to style; may contain ANSI codes
+# Outputs:
+#   Writes the styled text to STDOUT
+#######################################
+style() {
+  local applied="${1:-}"
+  local text="${2:-}"
+
+  # Embedded resets may be unrendered constants ('\033[0m') or escape
+  # sequences already rendered by command substitution; handle both
+  text="${text//"${RESET}"/${RESET}${applied}}"
+  text="${text//"${RESET_RENDERED}"/${RESET_RENDERED}${applied}}"
+
+  log "${applied}${text}${RESET}"
+}
+
 log_success() {
-  log "${SUCCESS}${1:-}${RESET}"
+  style "${SUCCESS}" "${1:-}"
 }
 
 log_important() {
-  log "${IMPORTANT}${1:-}${RESET}"
+  style "${IMPORTANT}" "${1:-}"
 }
 
 log_warn() {
-  log "${WARN}${1:-}${RESET}"
+  style "${WARN}" "${1:-}"
 }
 
 log_error() {
-  log "${BRIGHT_RED_BG} ${BRIGHT_WHITE}${1:-} ${RESET}"
+  style "${BRIGHT_RED_BG}${BRIGHT_WHITE}" " ${1:-} "
 }
 
 ####################
 # Inline Shortcuts #
 ####################
 highlight() {
-  log "${HIGHLIGHT}${1:-}${RESET}"
+  style "${HIGHLIGHT}" "${1:-}"
 }
 hotkey() {
-  log "${HOTKEY}${1:-}${RESET}"
+  style "${HOTKEY}" "${1:-}"
 }
 success() {
-  log "${SUCCESS}${1:-}${RESET}"
+  style "${SUCCESS}" "${1:-}"
 }
 important() {
-  log "${IMPORTANT}${1:-}${RESET}"
+  style "${IMPORTANT}" "${1:-}"
 }
 warn() {
-  log "${WARN}${1:-}${RESET}"
+  style "${WARN}" "${1:-}"
 }
 error() {
-  log "${ERROR}${1:-}${RESET}"
+  style "${ERROR}" "${1:-}"
 }
 bold() {
-  log "${BOLD}${1:-}${RESET}"
+  style "${BOLD}" "${1:-}"
 }
 underline() {
-  log "${UNDERLINE}${1:-}${RESET}"
+  style "${UNDERLINE}" "${1:-}"
 }
 strike() {
-  log "${STRIKE}${1:-}${RESET}"
+  style "${STRIKE}" "${1:-}"
 }
 blink() {
-  log "${BLINK}${1:-}${RESET}"
+  style "${BLINK}" "${1:-}"
 }
