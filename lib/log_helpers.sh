@@ -1,5 +1,6 @@
-# Source the required ANSI color definitions
-source lib/ansi-colors.sh
+# Source the required ANSI color definitions, relative to this file's
+# location so the caller's working directory does not matter
+source "$(dirname "${BASH_SOURCE[0]}")/ansi-colors.sh"
 
 # Define log level colors
 SUCCESS="${GREEN}"
