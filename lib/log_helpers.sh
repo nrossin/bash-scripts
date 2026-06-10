@@ -17,6 +17,22 @@ log_pending() {
   printf "%b" "${1:-}"
 }
 
+log_heading() {
+  # Print a heading with dynamically sized border
+  local text="${1:-}"
+  local width=$((${#text} + 2))
+  local line
+
+  printf -v line '%*s' "$width" ''
+  line=${DIM}${line// /-}
+
+  log
+  log_important "$line"
+  log_important " $text"
+  log_important "$line"
+  log
+}
+
 #######################################
 # Apply a style to text, re-applying the style after any embedded resets so
 # nested inline shortcuts (e.g. "$(hotkey ...)") do not cancel the enclosing
