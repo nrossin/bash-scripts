@@ -1,6 +1,8 @@
 #!/bin/bash
 
-source lib/log_helpers.sh
+# Source dependencies relative to this file's location so the caller's
+# working directory does not matter
+source "$(dirname "${BASH_SOURCE[0]}")/log_helpers.sh"
 
 # Enable extended globbing, required to strip ANSI codes in visible_length()
 shopt -s extglob
