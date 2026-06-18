@@ -14,27 +14,64 @@ shopt -s extglob
 CARET="->"
 
 wait_continue() {
-  log
-  log_pending "$(style "${BOLD}" "Press [$(hotkey "ENTER")] to continue ${CARET} ")"
-  read -r
-}
-
-continue_or_exit() {
   local choice
 
   log
-  log_pending "$(style "${BOLD}" "Press [$(hotkey "ENTER")] to continue or [$(hotkey "X")] to exit now. ${CARET} ")"
-  read -r choice
+  while true; do
+    log_pending "$(style "${BOLD}" "Press [$(hotkey "ENTER")] to continue ${CARET} ")"
+    read -r choice
 
-  case "$choice" in
-    [Xx])
-      log "Exiting script immediately ..."
-      exit 0
-      ;;
-    *)
+    if [[ -z "$choice" ]]; then
       return 0
-      ;;
-  esac
+    fi
+  done
+}
+
+#######################################
+# Prompt the user to either continue or choose one alternate action.
+# Pressing ENTER continues. Pressing the configured hotkey selects the
+# alternate action. Invalid input is rejected and the prompt is shown again.
+# Globals:
+#   CARET - Appended to the prompt
+# Arguments:
+#   $1 - The alternate option, formatted as "hotkey|text"
+#        e.g. "B|Back" displays as "[B] Back"
+# Outputs:
+#   Writes the prompt and any error messages to STDOUT
+# Return:
+#   0 if the user presses ENTER, 1 if the user enters the alternate hotkey
+#######################################
+continue_or() {
+  local option="$1" # In the format of "hotkey|text"
+  local hotkey="${option%%|*}"
+  local text="${option#*|}"
+  local choice
+
+  log
+  while true; do
+    log_pending "$(style "${BOLD}" "Press [$(hotkey "ENTER")] to continue or $(format_option "$option"). ${CARET} ")"
+    read -r choice
+
+    case "$choice" in
+      "")
+        return 0
+        ;;
+      *)
+        if [[ "${choice^^}" == "${hotkey^^}" ]]; then
+          return 1
+        fi
+
+        log_error "Invalid option: \"${choice}\". Please try again."
+        ;;
+      esac
+  done
+}
+
+continue_or_back() {
+  if ! continue_or "B|to go BACK"; then
+    return 1
+  fi
+  return 0
 }
 
 #######################################
@@ -246,5 +283,20 @@ hotkey_prompt() {
 #   0 once a valid hotkey has been selected
 #######################################
 get_yes_no() {
-  inline_prompt "${1:-}" "Y|Yes" "N|No"
+
+  while true; do
+    inline_prompt "${1:-}" "Y|Yes" "N|No"
+
+    case "$SELECTED_HOTKEY" in
+      [Y])
+        return 0
+        ;;
+      [N])
+        return 1
+        ;;
+      *)
+        log_error "Invalid choice"
+        ;;
+    esac
+  done
 }
