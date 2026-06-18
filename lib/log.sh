@@ -10,10 +10,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/ansi-colors.sh"
 
 # Define log level colors
 SUCCESS="${GREEN}"
-IMPORTANT="${MAGENTA}"
+IMPORTANT="${BRIGHT_MAGENTA}"
 WARN="${YELLOW}"
 ERROR="${RED}"
-HIGHLIGHT="${BLUE}"
+HIGHLIGHT="${BRIGHT_BLUE}"
 HOTKEY="${BOLD_BRIGHT_CYAN}"
 
 log() {
@@ -78,7 +78,7 @@ log_warn() {
 }
 
 log_error() {
-  style "${BRIGHT_RED_BG}${BRIGHT_WHITE}" " ${1:-} "
+  style "${ERROR}" "${1:-}"
 }
 
 ####################
