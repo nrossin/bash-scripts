@@ -80,7 +80,7 @@ format_option() {
 }
 
 #######################################
-# Display a menu of options, one per row. When there are 10 or more options,
+# Display a menu of options, one per row. When there are 5 or more options,
 # the menu is split into two equal, aligned columns instead.
 # Globals:
 #   None
@@ -94,7 +94,7 @@ display_menu() {
   local options=("$@")
   local option
 
-  if (( ${#options[@]} >= 10 )); then
+  if (( ${#options[@]} >= 5 )); then
     display_menu_columns "${options[@]}"
     return 0
   fi
