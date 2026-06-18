@@ -1,3 +1,9 @@
+# log.sh
+#
+# Logging and terminal styling helpers for CL Dev Manager.
+# Sources ANSI color definitions and exposes common log levels, headings,
+# inline style shortcuts, and reset-safe formatting helpers.
+
 # Source the required ANSI color definitions, relative to this file's
 # location so the caller's working directory does not matter
 source "$(dirname "${BASH_SOURCE[0]}")/ansi-colors.sh"

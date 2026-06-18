@@ -1,8 +1,10 @@
-#!/bin/bash
-
-# Source dependencies relative to this file's location so the caller's
-# working directory does not matter
-source "$(dirname "${BASH_SOURCE[0]}")/log_helpers.sh"
+# input.sh
+#
+# Interactive prompt and menu helpers used by CL Dev Manager tasks.
+# Provides reusable functions for waiting on user input, rendering hotkey
+# options, displaying one- or two-column menus, and validating selected hotkeys.
+#
+# Requires log/style helper functions from log.sh.
 
 # Enable extended globbing, required to strip ANSI codes in visible_length()
 shopt -s extglob

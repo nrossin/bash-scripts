@@ -1,6 +1,8 @@
-#########################
-# ANSI Library for Bash #
-#########################
+# ansi-colors.sh
+#
+# Defines ANSI escape code constants used by the logging and prompt helpers.
+# These values are intentionally stored as reusable string constants so other
+# scripts can compose styled terminal output consistently.
 
 # Reset
 RESET='\033[0m'            # Reset ALL attributes
